@@ -3,57 +3,66 @@ package com.hemebiotech.analytics;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AnalyticsCounter {
-	private static int headacheCount = 0;	// initialize to 0
-	private static int rashCount = 0;		// initialize to 0
-	private static int pupilCount = 0;		// initialize to 0
+	String filepath = new String();
+	List<String> allSymptoms = new ArrayList<String>();
+	Map<String, Integer> symptomsOccurs = new HashMap<String, Integer>();
 
-	public static void main(String args[]) throws Exception {
-		// first get input
-		List<String> allSymptoms = new ReadSymptomDataFromFile("C:\\Users\\LEHEMBR\\IdeaProjects\\Project_DA_Java_EN_Come_to_the_Rescue_of_a_Java_Application\\Project02Eclipse\\symptoms.txt").GetSymptoms();
+	public AnalyticsCounter(String filepath) throws IOException {
+		this.filepath = filepath;
+	}
 
-		Set<String> symptoms = new HashSet<>(allSymptoms);
+	public List<String> readSymptoms() {
 
-		for (int i = 0; i < allSymptoms.size(); i++) {
-			countSymptom(allSymptoms.get(i));
+		ReadSymptomDataFromFile readSymptomDataFromFile = new ReadSymptomDataFromFile(filepath);
+		allSymptoms = readSymptomDataFromFile.GetSymptoms();
+		return allSymptoms;
+
+	}
+
+	public void countSymptoms() {
+
+		symptomsOccurs.put(allSymptoms.get(0), 1);
+		for (int i = 1; i < allSymptoms.size(); i++) {
+			String symptom = allSymptoms.get(i);
+			if (symptomsOccurs.containsKey(symptom)) {
+				int nbSymptom = symptomsOccurs.get(symptom);
+				nbSymptom ++;
+				symptomsOccurs.put(symptom, nbSymptom);
+			} else {
+				symptomsOccurs.put(allSymptoms.get(i), 1);
+			}
 		}
-		writeSymptomStats();
-		return;
-
 	}
 
-	private static String countSymptom(String symptom) {
-
-//		int i = 0;	// set i to 0
-//		while (line != null) {
-//			i++;	// increment i
-//			System.out.println("symptom from file: " + line);
-//			if (line.equals("headache")) {
-//				headacheCount++;
-//				System.out.println("number of headaches: " + headacheCount);
-//			}
-//			else if (line.equals("rash")) {
-//				rashCount++;
-//			}
-//			else if (line.contains("pupils")) {
-//				pupilCount++;
-//			}
+//	public void sortSymptoms() {
 //
-//			line = reader.readLine();	// get another symptom
+//		Map sortedMap = new TreeMap(symptomsOccurs);
+//
+//		Set set = sortedMap.entrySet();
+//		Iterator iterator = set.iterator();
+//		while(iterator.hasNext()) {
+//			Map.Entry me = (Map.Entry)iterator.next();
+//			System.out.print(me.getKey() + ": ");
+//			System.out.println(me.getValue());
 //		}
-		return symptom;
-	}
+//	}
 
-	private static void writeSymptomStats() throws IOException {
+	public void writeSymptomStats() throws IOException {
 		// next generate output
 		FileWriter writer = new FileWriter ("./result.out");
-		writer.write("headache: " + headacheCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("dialated pupils: " + pupilCount + "\n");
+
+		Map sortedMap = new TreeMap(symptomsOccurs);
+
+		Set set = sortedMap.entrySet();
+		Iterator iterator = set.iterator();
+		while(iterator.hasNext()) {
+			Map.Entry symptomSorted = (Map.Entry)iterator.next();
+			writer.write(symptomSorted.getKey() + " : " + symptomSorted.getValue() + "\n");
+		}
+
 		writer.close();
 	}
 
