@@ -6,60 +6,51 @@ import java.io.IOException;
 import java.util.*;
 
 public class AnalyticsCounter {
-	String filepath = new String();
-	List<String> allSymptoms = new ArrayList<String>();
-	Map<String, Integer> symptomsOccurs = new HashMap<String, Integer>();
+	private String readFilepath;
+	private String writeFilepath;
+	private List<String> allSymptoms = new ArrayList<String>();
+	private Map<String, Integer> symptomsOccurs = new HashMap<String, Integer>();
 
-	public AnalyticsCounter(String filepath) throws IOException {
-		this.filepath = filepath;
+	public AnalyticsCounter(String readFilepath, String writeFilepath) throws IOException {
+		this.readFilepath = readFilepath;
+		this.writeFilepath = writeFilepath;
 	}
 
 	public List<String> readSymptoms() {
 
-		ReadSymptomDataFromFile readSymptomDataFromFile = new ReadSymptomDataFromFile(filepath);
-		allSymptoms = readSymptomDataFromFile.GetSymptoms();
+		ReadSymptomDataFromFile readSymptomDataFromFile = new ReadSymptomDataFromFile(readFilepath);
+		allSymptoms = readSymptomDataFromFile.getSymptoms();
 		return allSymptoms;
 
 	}
 
-	public void countSymptoms() {
+	public Map<String, Integer> countSymptoms(List<String> allSymptoms) {
 
 		symptomsOccurs.put(allSymptoms.get(0), 1);
-		for (int i = 1; i < allSymptoms.size(); i++) {
-			String symptom = allSymptoms.get(i);
+//		for (int i = 1; i < allSymptoms.size(); i++) {
+//			String symptom = allSymptoms.get(i);
+		for (String symptom : allSymptoms) {
 			if (symptomsOccurs.containsKey(symptom)) {
 				int nbSymptom = symptomsOccurs.get(symptom);
 				nbSymptom ++;
 				symptomsOccurs.put(symptom, nbSymptom);
 			} else {
-				symptomsOccurs.put(allSymptoms.get(i), 1);
+				symptomsOccurs.put(symptom, 1);
 			}
 		}
+		return symptomsOccurs;
 	}
 
-//	public void sortSymptoms() {
-//
-//		Map sortedMap = new TreeMap(symptomsOccurs);
-//
-//		Set set = sortedMap.entrySet();
-//		Iterator iterator = set.iterator();
-//		while(iterator.hasNext()) {
-//			Map.Entry me = (Map.Entry)iterator.next();
-//			System.out.print(me.getKey() + ": ");
-//			System.out.println(me.getValue());
-//		}
-//	}
-
-	public void writeSymptomStats() throws IOException {
+	public void writeSymptomStats(Map<String, Integer> symptomsOccurs) throws IOException {
 		// next generate output
-		FileWriter writer = new FileWriter ("./result.out");
+		FileWriter writer = new FileWriter (writeFilepath);
 
-		Map sortedMap = new TreeMap(symptomsOccurs);
+		Map<String,Integer> sortedMap  = new TreeMap<>(symptomsOccurs);
 
-		Set set = sortedMap.entrySet();
-		Iterator iterator = set.iterator();
+		Set<Map.Entry<String,Integer>> set = sortedMap.entrySet();
+		Iterator<Map.Entry<String,Integer>> iterator = set.iterator();
 		while(iterator.hasNext()) {
-			Map.Entry symptomSorted = (Map.Entry)iterator.next();
+			Map.Entry<String,Integer> symptomSorted = iterator.next();
 			writer.write(symptomSorted.getKey() + " : " + symptomSorted.getValue() + "\n");
 		}
 
