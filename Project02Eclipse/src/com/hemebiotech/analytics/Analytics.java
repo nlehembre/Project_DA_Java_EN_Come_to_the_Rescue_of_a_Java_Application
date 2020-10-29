@@ -3,6 +3,7 @@ package com.hemebiotech.analytics;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Analytics {
     public static void main(String args[]) throws Exception {
@@ -15,6 +16,8 @@ public class Analytics {
 
         Map<String, Integer> symptomsOccurs = analyticsCounter.countSymptoms(symptoms);
 
-        analyticsCounter.writeSymptomStats(symptomsOccurs);
+        Set<Map.Entry<String,Integer>> symptomsSorted = analyticsCounter.sortSymptoms(symptomsOccurs);
+
+        analyticsCounter.writeSymptomStats(symptomsSorted);
     }
 }

@@ -27,8 +27,6 @@ public class AnalyticsCounter {
 	public Map<String, Integer> countSymptoms(List<String> allSymptoms) {
 
 		symptomsOccurs.put(allSymptoms.get(0), 1);
-//		for (int i = 1; i < allSymptoms.size(); i++) {
-//			String symptom = allSymptoms.get(i);
 		for (String symptom : allSymptoms) {
 			if (symptomsOccurs.containsKey(symptom)) {
 				int nbSymptom = symptomsOccurs.get(symptom);
@@ -41,20 +39,16 @@ public class AnalyticsCounter {
 		return symptomsOccurs;
 	}
 
-	public void writeSymptomStats(Map<String, Integer> symptomsOccurs) throws IOException {
-		// next generate output
-		FileWriter writer = new FileWriter (writeFilepath);
+	public Set<Map.Entry<String,Integer>> sortSymptoms(Map<String,Integer> symptomsOccurs) {
+		Map<String,Integer> symptomsWork  = new TreeMap<>(symptomsOccurs);
+		Set<Map.Entry<String,Integer>> symptomsSorted = symptomsWork.entrySet();
+		return symptomsSorted;
+	}
 
-		Map<String,Integer> sortedMap  = new TreeMap<>(symptomsOccurs);
+	public void writeSymptomStats(Set<Map.Entry<String,Integer>> symptomsSorted) throws IOException {
 
-		Set<Map.Entry<String,Integer>> set = sortedMap.entrySet();
-		Iterator<Map.Entry<String,Integer>> iterator = set.iterator();
-		while(iterator.hasNext()) {
-			Map.Entry<String,Integer> symptomSorted = iterator.next();
-			writer.write(symptomSorted.getKey() + " : " + symptomSorted.getValue() + "\n");
-		}
-
-		writer.close();
+		WriteSymptomStatsIntoFile writeSymptomStatsIntoFile = new WriteSymptomStatsIntoFile(writeFilepath);
+		writeSymptomStatsIntoFile.writeSymptoms(symptomsSorted);
 	}
 
 }
