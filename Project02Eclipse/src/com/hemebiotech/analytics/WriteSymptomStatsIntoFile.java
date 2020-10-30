@@ -16,7 +16,8 @@ public class WriteSymptomStatsIntoFile implements ISymptomWriter {
         this.filepath = filepath;
     }
 
-    public void writeSymptoms(Set<Map.Entry<String, Integer>> symptomsSorted) throws IOException {
+    @Override
+    public void writeSymptoms(Set<Map.Entry<String, Integer>> symptomsSorted) {
         if (filepath != null) {
             try {
                 FileWriter writer = new FileWriter (filepath);

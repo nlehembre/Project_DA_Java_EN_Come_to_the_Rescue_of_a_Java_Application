@@ -1,30 +1,25 @@
 package com.hemebiotech.analytics;
 
-
 import java.io.IOException;
 import java.util.*;
 
 public class AnalyticsCounter {
-	private String readFilepath;
-	private String writeFilepath;
+	private final ISymptomReader iSymptomReader;
+ 	private final ISymptomWriter iSymptomWriter;
 	private List<String> allSymptoms = new ArrayList<String>();
 	private Map<String, Integer> symptomsOccurs = new HashMap<String, Integer>();
 
-	public AnalyticsCounter(String readFilepath, String writeFilepath) throws IOException {
-		this.readFilepath = readFilepath;
-		this.writeFilepath = writeFilepath;
+	public AnalyticsCounter(ISymptomReader iSymptomReader, ISymptomWriter iSymptomWriter) throws IOException {
+		this.iSymptomReader = iSymptomReader;
+		this.iSymptomWriter = iSymptomWriter;
 	}
 
 	public List<String> readSymptoms() {
-
-		ReadSymptomDataFromFile readSymptomDataFromFile = new ReadSymptomDataFromFile(readFilepath);
-		allSymptoms = readSymptomDataFromFile.getSymptoms();
+		allSymptoms = iSymptomReader.getSymptoms();
 		return allSymptoms;
-
 	}
 
 	public Map<String, Integer> countSymptoms(List<String> allSymptoms) {
-
 		symptomsOccurs.put(allSymptoms.get(0), 1);
 		for (String symptom : allSymptoms) {
 			if (symptomsOccurs.containsKey(symptom)) {
@@ -45,9 +40,7 @@ public class AnalyticsCounter {
 	}
 
 	public void writeSymptomStats(Set<Map.Entry<String,Integer>> symptomsSorted) throws IOException {
-
-		WriteSymptomStatsIntoFile writeSymptomStatsIntoFile = new WriteSymptomStatsIntoFile(writeFilepath);
-		writeSymptomStatsIntoFile.writeSymptoms(symptomsSorted);
+		iSymptomWriter.writeSymptoms(symptomsSorted);
 	}
 
 }
