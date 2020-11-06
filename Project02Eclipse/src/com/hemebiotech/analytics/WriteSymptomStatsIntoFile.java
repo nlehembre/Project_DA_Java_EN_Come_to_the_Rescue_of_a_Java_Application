@@ -10,27 +10,25 @@ public class WriteSymptomStatsIntoFile implements ISymptomWriter {
 
     /**
      *
-     * @param filepath a full or partial path to file where each symtom is printed
+     * @param filepath a full or partial path to file where the list sorted of symptoms is printed : each symtom with occurrences
      */
+
     public WriteSymptomStatsIntoFile (String filepath) {
         this.filepath = filepath;
     }
 
+    /**
+     *
+     * @param symptomsSorted the list of symptoms sorted (key = symptom ; value = occurrences)
+     * @throws IOException : error while writing
+     */
     @Override
-    public void writeSymptoms(Set<Map.Entry<String, Integer>> symptomsSorted) {
+    public void writeSymptoms(List<Map.Entry<String, Integer>> symptomsSorted) throws IOException {
         if (filepath != null) {
-            try {
-                FileWriter writer = new FileWriter (filepath);
-
-                Iterator<Map.Entry<String,Integer>> iterator = symptomsSorted.iterator();
-
-                while(iterator.hasNext()) {
-                    Map.Entry<String,Integer> symptomSorted = iterator.next();
+            try (FileWriter writer = new FileWriter (filepath)) {
+                 for (Map.Entry<String, Integer> symptomSorted : symptomsSorted) {
                     writer.write(symptomSorted.getKey() + " : " + symptomSorted.getValue() + "\n");
                 }
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
