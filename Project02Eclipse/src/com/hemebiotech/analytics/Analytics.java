@@ -9,7 +9,7 @@ public class Analytics {
 
     public static void main(String args[]) {
         String readFilepath = "C:\\Users\\LEHEMBR\\IdeaProjects\\Project_DA_Java_EN_Come_to_the_Rescue_of_a_Java_Application\\Project02Eclipse\\symptoms.txt";
-        String writeFilepath = "C:\\Users\\LEHEMBR\\IdeaProjects\\Project_DA_Java_EN_Come_to_the_Rescue_of_a_Java_Application\\Project02Eclipse\\result.out";
+        String writeFilepath = "C:\\Users\\LEHEMBR\\IdeaProjects\\Project_DA_Java_EN_Come_to_the_Rescue_of_a_Java_Application\\Project02Eclipse\\results.out";
 
         ISymptomReader iSymptomReader = new ReadSymptomDataFromFile(readFilepath);
         ISymptomWriter iSymptomWriter = new WriteSymptomStatsIntoFile(writeFilepath);
