@@ -20,7 +20,7 @@ public class Analytics {
         try {
             symptoms = analyticsCounter.readSymptoms();
         } catch (IOException e) {
-            System.err.println("Error while reading the source of symptoms");
+            System.err.println("Error while reading the source of symptoms : " + e);
             return;
         }
         Map<String, Integer> symptomsOccurs = analyticsCounter.countSymptoms(symptoms);
@@ -30,7 +30,7 @@ public class Analytics {
         try {
             analyticsCounter.writeSymptomStats(symptomsSorted);
         } catch (IOException e) {
-            System.err.println("Error while writing the analytic list of symptoms");
+            System.err.println("Error while writing the analytic list of symptoms : "+ e);
             ;
         }
     }
